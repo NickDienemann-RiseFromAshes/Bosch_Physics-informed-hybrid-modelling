@@ -25,24 +25,26 @@ This study compares four approaches for radar-based velocity estimation:
 
 Uses a RANSAC-based Least Squares method to estimate the full velocity vector from radar-derived radial velocities.
 
-![][images\physics_based_estimator_architecture_at_test_time_extended.PNG]
-**[Insert Figure Placeholder: Physics-Based Velocity Estimation Architecture]**
+![](images/physics_based_estimator_architecture_at_test_time_extended.PNG)  
+*Figure 1: Model architecture when using a physics-based velocity estimator at test time. The vanilla architecture is extended, such that the output bounding boxes and input point cloud are fed into the physics-based estimator to obtain the velocity prediction for each individual object.*
 
 ### 2. Physics-Based Labels
 
 Generates training labels using a physics model, enabling both supervised and semi-supervised training regimes.
 
-**[Insert Figure Placeholder: Physics-Based Label Generation]**
+![](images/physics_label_model_architecture_at_train_time.PNG)  
+*Figure 2: Model architecture when using a physics-based velocity estimation for generating velocity labels at training time. In comparison to before, the physics-based estimator is now not integrated at the output at test time, but instead delivers the velocity labels used for supervised training. At this step, semi-supervision can be implemented by randomly overwriting only a fraction of available (or unavailable) velocity labels.*
 
 ### 3. Physics-Based Loss Function
 
 Integrates an additional physics-informed loss term that compares projected velocity profiles against measured radar hits.
 
-**[Insert Figure Placeholder: Physics-Based Loss Function Architecture]**
+![](images/physics_loss_function_architecture_overview.PNG)  
+*Figure 3: Model architecture when using a physics-based loss function at training time. The vanilla baseline is extended by an additional loss branch containing four additional steps. First, the grids are transformed into entities using the bbox decoder. This is followed by a projection of the predicted velocity profile onto the associated radar hits of each object. Thirdly, after calculating the residual between the projected and measured radial velocities, these residuals are weighted by their corresponding rigidity. Lastly, the loss for the entire frame is calculated by the weighted mean of the per-bbox loss weighted with their corresponding regression loss.*
 
 ### 4. Vanilla Deep Learning Baseline
 
-Used as a reference model without any physics-informed components.
+Used as a purely Deep Learning based approach without any physical prior.
 
 ## Results
 
@@ -50,19 +52,22 @@ Used as a reference model without any physics-informed components.
 
 Evaluation across multiple object classes (vehicles, large vehicles, riders, pedestrians) using metrics like velocity error, physics error, and average precision.
 
-**[Insert Figure Placeholder: nuScenes Validation Results Comparison]**
+![](images/no_time_aggregation_comparison.png)  
+*Figure 4: Comparison on the nuScenes validation dataset without time aggregation between the baseline (left) and the three methodologies presented in this work, i.e. physics-based velocity estimation (center left), physics-based labels (center right), and a physics-based loss function (right). The performance is measured by the average velocity error (top), average physics error (middle), and average precision (bottom) for each class. Note that the APE of the physics-based labels experiment was clipped at 0.5 m/s for enhanced readability.*
 
 ### Qualitative Evaluation
 
 Extrapolated predicted trajectories and comparison with ground truth in complex driving scenarios.
 
-**[Insert Figure Placeholder: Rotation Velocity Estimation - Qualitative Results]**
+![](images/qualitative_comparison_rotation_velocity_estimation.png)  
+*Figure 5: Qualitative evaluation of the rotation velocity estimation from a bird's-eye view on the nuScenes validation dataset. Shown are the trajectories based on the predicted velocity profile extrapolated 1–4 seconds into the future (yellow), with ground truth (blue) and future position (transparent blue). Dynamic radar points are shown in blue/green; static in red. The top row displays a turning maneuver captured by the physics-based methods but missed by the baseline. The bottom row shows a false positive rotation.*
 
 ### Semi-Supervision Experiment
 
 Performance comparison with decreasing label availability shows strong resilience of physics-informed methods.
 
-**[Insert Figure Placeholder: Supervision vs. Error Plot]**
+![](images/semi_supervision.png)  
+*Figure 6: Velocity error (blue) and physics error (red) for the class 'vehicle' plotted against the percentage of available velocity labels (100% to 0%). The physics-based labels use a one DOF system matrix solved by a median solver, and the physics-based loss uses a fixed center of rotation and uniform rigidity. Note the clipped velocity error for the baseline at 0% supervision and the matching results of baseline and physics-based labels at 100% supervision.*
 
 ## Institutional Affiliation
 
@@ -72,7 +77,6 @@ This research was conducted as part of my Bachelor’s thesis in collaboration w
 - **Prof. Dr.-Ing. Serdal Ayhan** (Secondary Examiner)  
 - **Dr.-Ing. Jiaying Lin** (Industry Supervisor, Bosch)
 
-The thesis received a **grade of 1.0** (highest possible in the German system) and was awarded a **special distinction** for excellence.
+The thesis received a grade of 1.0 (highest possible in the German system) and was awarded a special distinction.
 
 ---
-
