@@ -25,6 +25,7 @@ This study compares four approaches for radar-based velocity estimation:
 
 Uses a RANSAC-based Least Squares method to estimate the full velocity vector from radar-derived radial velocities.
 
+![][images\physics_based_estimator_architecture_at_test_time_extended.PNG]
 **[Insert Figure Placeholder: Physics-Based Velocity Estimation Architecture]**
 
 ### 2. Physics-Based Labels
